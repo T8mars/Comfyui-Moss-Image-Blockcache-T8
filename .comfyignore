@@ -1,0 +1,11 @@
+roadmap.md
+.local/
+_reference/
+artifacts/
+dist/
+tests/
+scripts/
+.github/
+.git/
+.pytest_cache/
+__pycache__/

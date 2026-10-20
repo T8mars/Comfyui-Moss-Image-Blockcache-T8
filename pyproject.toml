@@ -1,0 +1,26 @@
+[project]
+name = "moss-image-blockcache-t8"
+version = "0.1.0"
+description = "Experimental BlockCache for ComfyUI's native MOSS-Image Base and SFT."
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+dependencies = []
+readme = "README.md"
+
+[project.urls]
+Repository = "https://github.com/T8mars/Comfyui-Moss-Image-Blockcache-T8"
+Documentation = "https://github.com/T8mars/Comfyui-Moss-Image-Blockcache-T8#readme"
+"Bug Tracker" = "https://github.com/T8mars/Comfyui-Moss-Image-Blockcache-T8/issues"
+
+[tool.comfy]
+PublisherId = "t8star"
+DisplayName = "MOSS Image BlockCache T8"
+requires-comfyui = ">=0.42.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--import-mode=importlib"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"

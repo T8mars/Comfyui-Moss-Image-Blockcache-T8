@@ -1,0 +1,1036 @@
+{
+  "status": "completed",
+  "version": "0.1.0",
+  "created_utc": "2026-10-20T11:43:15.227767+00:00",
+  "validation_scope": "user_approved_finite",
+  "complete_36_pair_matrix": false,
+  "acceptance_basis": "User requested one or two successful test groups and stopping extended testing. Both Base/SFT real canvas runs and existing reviewed evidence were retained.",
+  "extended_testing": {
+    "status": "stopped_per_user_request",
+    "not_completed": [
+      "Full 36-pair matrix",
+      "Same-seed repeat timings",
+      "Parameter sensitivity probes"
+    ]
+  },
+  "source_sha256": {
+    "cache.py": "80c719cea148642fb6229df44cc677d2af4cfbcdeb4b8abc4e148442aef984f8",
+    "runtime.py": "864857c941d830ad1fb839942eb046d3880c5f9c4a5fd79d5617a803712eb696",
+    "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+  },
+  "tests": {
+    "passed": 51,
+    "failures_errors_skips": 0
+  },
+  "canvas": {
+    "base": {
+      "status": "success",
+      "prompt_id": "f351b276-75ad-4d57-b8a0-9c7521e85098",
+      "frontend_origin": "comfyui-frontend",
+      "size": [
+        1024,
+        1024
+      ],
+      "workflow_nodes": 12,
+      "png_sha256": "d60c2f56e7727c27d65e2355d6ad15f9ee0aaa0485a83c8cbdb1b97cab618e7b",
+      "source_sha256": {
+        "cache.py": "80c719cea148642fb6229df44cc677d2af4cfbcdeb4b8abc4e148442aef984f8",
+        "runtime.py": "864857c941d830ad1fb839942eb046d3880c5f9c4a5fd79d5617a803712eb696",
+        "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+      }
+    },
+    "sft": {
+      "status": "success",
+      "prompt_id": "9d076db0-8e42-4018-bdb5-5a4ca9fa7c5c",
+      "frontend_origin": "comfyui-frontend",
+      "size": [
+        1024,
+        1024
+      ],
+      "workflow_nodes": 12,
+      "png_sha256": "0eecdb411c61f538e25e1568bcc706a5e44ad99a1c576adcb16d5aa4df3ea3f5",
+      "source_sha256": {
+        "cache.py": "80c719cea148642fb6229df44cc677d2af4cfbcdeb4b8abc4e148442aef984f8",
+        "runtime.py": "864857c941d830ad1fb839942eb046d3880c5f9c4a5fd79d5617a803712eb696",
+        "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+      }
+    }
+  },
+  "cuda_smoke": {
+    "status": "passed",
+    "scope": "Miniature real native MOSS, BF16 CUDA; not full-weight image quality or performance.",
+    "device": "NVIDIA GeForce RTX 5090 Laptop GPU",
+    "torch": "2.7.0+cu128",
+    "source_sha256": {
+      "cache.py": "80c719cea148642fb6229df44cc677d2af4cfbcdeb4b8abc4e148442aef984f8",
+      "runtime.py": "864857c941d830ad1fb839942eb046d3880c5f9c4a5fd79d5617a803712eb696",
+      "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+    },
+    "gpu_cpu_outputs_pixel_equal": true,
+    "cases": [
+      {
+        "cache_device": "gpu",
+        "threshold": 0.05,
+        "layer_calls": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "head_calls": 3,
+        "hits": 1,
+        "skipped_blocks": 3,
+        "retained_bytes": 5376
+      },
+      {
+        "cache_device": "cpu",
+        "threshold": 0.05,
+        "layer_calls": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "head_calls": 3,
+        "hits": 1,
+        "skipped_blocks": 3,
+        "retained_bytes": 5376
+      },
+      {
+        "cache_device": "gpu",
+        "threshold": 0,
+        "layer_calls": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "head_calls": 3,
+        "hits": 0,
+        "skipped_blocks": 0,
+        "retained_bytes": 0
+      }
+    ]
+  },
+  "zero_threshold_parity": {
+    "mae_255": 0.0,
+    "rmse_255": 0.0,
+    "psnr_db": null,
+    "pixel_equal": true,
+    "baseline_std": 76.14869211687169,
+    "cache_std": 76.14869211687169
+  },
+  "manual_review": {
+    "status": "passed",
+    "reviewed_pairs": 18,
+    "scope": "Only the actual reviewed rows below; no full-matrix acceptance claim",
+    "reviewer": "Codex visual inspection of actual paired images"
+  },
+  "environment": {
+    "comfyui_version": "0.42.0",
+    "comfyui_commit": "8f04fd6ecf4a548937971e840af2a985529fab76",
+    "python": "3.10.10",
+    "pytorch": "2.7.0+cu128",
+    "gpu": "cuda:0 NVIDIA GeForce RTX 5090 Laptop GPU : cudaMallocAsync",
+    "attention": "pytorch"
+  },
+  "parameters": {
+    "size": [
+      1024,
+      1024
+    ],
+    "steps": 50,
+    "cfg": 3,
+    "sampler": "euler",
+    "scheduler": "simple",
+    "negative_skip_layer": 22,
+    "native_shift": 5,
+    "native_timestep_multiplier": 1,
+    "threshold": 0.05,
+    "window": [
+      0.1,
+      0.9
+    ],
+    "max_consecutive_hits": 1,
+    "cache_device": "gpu"
+  },
+  "timing_scope": "KSampler-node wall time includes setup/model loading; workflow time also includes encoding, decoding and saving. Baseline precedes cache. Finite reviewed SFT samples, not pure GPU kernel time, randomized repeated timing, or a Base speed claim.",
+  "rows": [
+    {
+      "variant": "sft",
+      "case": "anime",
+      "seed": 42,
+      "mae_255": 12.937052090962728,
+      "rmse_255": 22.37688687429504,
+      "psnr_db": 21.13481028240033,
+      "pixel_equal": false,
+      "baseline_std": 68.93060916613422,
+      "cache_std": 66.73538069994062,
+      "baseline_sampler_s": 86.72465499999817,
+      "cache_sampler_s": 67.61500839999644,
+      "baseline_total_s": 116.97815179999452,
+      "cache_total_s": 95.3633127999783,
+      "sampling_speedup": 1.282624332262935,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.363,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "c6e989ce-42b7-4c8f-87d4-ed31258cce6c",
+      "cache_prompt_id": "9e7f39df-4c61-4b8d-aec8-e7d7839aedba",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Blue-haired adult anime woman, amber eyes, white jacket, red umbrella, hand grasp and rainy street composition retained. Cuff color visibly changes from reddish to navy; garment folds, hair details and incidental shop lettering/background details change. No new gross limb or subject-identity failure is visible relative to baseline.",
+        "viewed": "Actual final-source paired contact sheet, 384px thumbnails",
+        "reviewed_utc": "2026-10-20T11:16:59.635539+00:00",
+        "baseline_prompt_id": "c6e989ce-42b7-4c8f-87d4-ed31258cce6c",
+        "baseline_png_sha256": "675623b0d9f12c288c4506d10c5897af905ad5653bdb3f0f57aced47b7fc56f1",
+        "cache_prompt_id": "9e7f39df-4c61-4b8d-aec8-e7d7839aedba",
+        "cache_png_sha256": "edd6b5e9a314a21b66bd4c11f7b13d3fdcae66d6e36bcfca8af5aab3615b2495"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "anime",
+      "seed": 43,
+      "mae_255": 13.254068692525228,
+      "rmse_255": 25.076244609366874,
+      "psnr_db": 20.145553657329735,
+      "pixel_equal": false,
+      "baseline_std": 65.97052454825516,
+      "cache_std": 61.3677289216319,
+      "baseline_sampler_s": 83.01934580001398,
+      "cache_sampler_s": 68.566756300017,
+      "baseline_total_s": 108.55630209998344,
+      "cache_total_s": 100.10089689999586,
+      "sampling_speedup": 1.2107812922746266,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.363,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "615589d7-cdb6-4cb3-ac31-87de1de37bcf",
+      "cache_prompt_id": "3f09ccf9-d991-44e5-87e3-f03bff2e646b",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Side pose, blue hair, amber eyes, white coat and red umbrella/handle remain coherent. Visible hand grasp and face remain usable. Coat collar, shoulder strap/clip and background details change, so clothing accessories are not preserved exactly.",
+        "viewed": "Actual final-source paired contact sheet, 384px thumbnails",
+        "reviewed_utc": "2026-10-20T11:17:00.049032+00:00",
+        "baseline_prompt_id": "615589d7-cdb6-4cb3-ac31-87de1de37bcf",
+        "baseline_png_sha256": "296318b5b8e4defc11783ccf9fc9037703c590dad6ae8405133acad32ed1a7c4",
+        "cache_prompt_id": "3f09ccf9-d991-44e5-87e3-f03bff2e646b",
+        "cache_png_sha256": "4f46b893537a71bee41440b8ebb1f16f19edbb6fe4f1a69bff4d913502d9e4f4"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "anime",
+      "seed": 44,
+      "mae_255": 10.715033849080404,
+      "rmse_255": 19.091534125429813,
+      "psnr_db": 22.513987046632057,
+      "pixel_equal": false,
+      "baseline_std": 63.47923766554115,
+      "cache_std": 59.92871224065301,
+      "baseline_sampler_s": 86.10079480000422,
+      "cache_sampler_s": 71.11308859998826,
+      "baseline_total_s": 121.15187589998823,
+      "cache_total_s": 108.97010370000498,
+      "sampling_speedup": 1.210758757566022,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.363,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "8ddc4637-b1b2-42b8-bdce-55157e9e29e1",
+      "cache_prompt_id": "7782d337-f5b2-425c-b88b-0fecb533d55a",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Main adult anime subject, amber eyes, blue hair, red umbrella and hand placement retained. Coat collar and shoulder strap material/buckle change visibly, with additional hair, face and reflection differences. Main composition remains usable relative to the native baseline.",
+        "viewed": "Actual final-source paired contact sheet, 384px thumbnails",
+        "reviewed_utc": "2026-10-20T11:17:00.449542+00:00",
+        "baseline_prompt_id": "8ddc4637-b1b2-42b8-bdce-55157e9e29e1",
+        "baseline_png_sha256": "4bf58738f54ceb2049655f9432150837cd1d11d5ccb6edbc4a9f9e0ff9f69456",
+        "cache_prompt_id": "7782d337-f5b2-425c-b88b-0fecb533d55a",
+        "cache_png_sha256": "f52db61f623a7c988ddb783557d2d758337a5af2651be736207a95f1aed3ceeb"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "chinese",
+      "seed": 42,
+      "mae_255": 11.251284917195639,
+      "rmse_255": 19.15286951901406,
+      "psnr_db": 22.48612660873392,
+      "pixel_equal": false,
+      "baseline_std": 70.00470045466001,
+      "cache_std": 68.00668908075565,
+      "baseline_sampler_s": 86.3916223999986,
+      "cache_sampler_s": 68.7896660999977,
+      "baseline_total_s": 114.82227269999566,
+      "cache_total_s": 99.75201190001098,
+      "sampling_speedup": 1.2558808219015543,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.343,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "6ccd1512-563c-4abf-9552-f8f6bc6deda8",
+      "cache_prompt_id": "fe2e5665-4801-428b-bef1-140bdc6722e1",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Both full-resolution signs retain all eight requested Chinese characters (Chun Ri Ka Fei / Huan Ying Guang Lin), with no missing or added character on the sign. Sign position, plant and cafe layout are retained. Small logo, foliage, reflections, background glass decoration and sunlight patterns change visibly; incidental dark decoration on the left glass changes substantially.",
+        "viewed": "Both actual full-resolution originals and paired contact sheet",
+        "reviewed_utc": "2026-10-20T10:50:44.063392+00:00",
+        "baseline_prompt_id": "6ccd1512-563c-4abf-9552-f8f6bc6deda8",
+        "baseline_png_sha256": "8d1c9c9612566487f3aa7ac42360e9f46c9216a68ecff89108105280cf9187ec",
+        "cache_prompt_id": "fe2e5665-4801-428b-bef1-140bdc6722e1",
+        "cache_png_sha256": "def563f6f9f8b30dcf77117696db38a7ebe38bee2393052e7a4953df592ef997"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "chinese",
+      "seed": 43,
+      "mae_255": 9.421041488647461,
+      "rmse_255": 15.807800821046937,
+      "psnr_db": 24.153374505692142,
+      "pixel_equal": false,
+      "baseline_std": 68.56661631301877,
+      "cache_std": 68.23195592463318,
+      "baseline_sampler_s": 83.63421849999577,
+      "cache_sampler_s": 68.21424420000403,
+      "baseline_total_s": 113.48920720000751,
+      "cache_total_s": 100.33920180000132,
+      "sampling_speedup": 1.2260521168391223,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.343,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "95f7235b-51d7-4d85-94bf-5daf2e696ff7",
+      "cache_prompt_id": "9945506a-de1c-4cd6-a715-7dc382407723",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Wall sign retains all eight requested Chinese characters in both images; the thin smaller second line remains readable, with no new missing or added character. Main wall sign, large plant/pot and doorway relation are retained. Foliage, shadow texture and incidental cafe furnishings change; background ceiling-light shapes and arrangement visibly differ.",
+        "viewed": "Both actual full-resolution originals and paired contact sheet",
+        "reviewed_utc": "2026-10-20T10:57:35.547413+00:00",
+        "baseline_prompt_id": "95f7235b-51d7-4d85-94bf-5daf2e696ff7",
+        "baseline_png_sha256": "a121359e7bdfdc6f64e8dcfed7ea26d2e101229968dcdc6d27f82255216e6156",
+        "cache_prompt_id": "9945506a-de1c-4cd6-a715-7dc382407723",
+        "cache_png_sha256": "517c743d948bdaa2de34cd310b7e30d4f7630161ec5846b9dea89c79ebdaad89"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "chinese",
+      "seed": 44,
+      "mae_255": 9.353697776794434,
+      "rmse_255": 17.012904252951547,
+      "psnr_db": 23.515234451810237,
+      "pixel_equal": false,
+      "baseline_std": 72.83059187776723,
+      "cache_std": 71.98044701376439,
+      "baseline_sampler_s": 83.8767194999964,
+      "cache_sampler_s": 68.9713757999998,
+      "baseline_total_s": 114.39425410001422,
+      "cache_total_s": 99.15966400000616,
+      "sampling_speedup": 1.2161091253742489,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.343,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "347cc3eb-e0ea-4a08-82ad-6bf5518c1b4c",
+      "cache_prompt_id": "f9d8cdbd-cc2b-45d4-b03d-9c5fa9de1d7f",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Both signs clearly read 春日咖啡 / 欢迎光临 with all eight requested characters and no new missing/added character. Two-line typography, sign and window/plant spatial relations are retained. Plant height and pot proportions change visibly, with altered foliage, wall shadows and background reflections; caching is not pixel- or object-detail-preserving.",
+        "viewed": "Both actual full-resolution originals and paired contact sheet",
+        "reviewed_utc": "2026-10-20T10:59:01.136237+00:00",
+        "baseline_prompt_id": "347cc3eb-e0ea-4a08-82ad-6bf5518c1b4c",
+        "baseline_png_sha256": "5475757b1886f937bad6ad6b8a292ea6b0c958b81fe18acf3e31b8e6eaa23a31",
+        "cache_prompt_id": "f9d8cdbd-cc2b-45d4-b03d-9c5fa9de1d7f",
+        "cache_png_sha256": "c5da540194a1c9ddf67c538c118c65084735873620a488f6597a49a9a30bc5f7"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "english",
+      "seed": 42,
+      "mae_255": 3.4880495071411133,
+      "rmse_255": 11.853071438163562,
+      "psnr_db": 26.654185570860697,
+      "pixel_equal": false,
+      "baseline_std": 76.14869211687169,
+      "cache_std": 75.6297133994065,
+      "baseline_sampler_s": 84.14926340000238,
+      "cache_sampler_s": 68.2232834000024,
+      "baseline_total_s": 114.38476240000455,
+      "cache_total_s": 99.03066590000526,
+      "sampling_speedup": 1.2334390725029136,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.431,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "5c7a250d-e7e9-4820-8ce6-11e81bd0afbe",
+      "cache_prompt_id": "5db55fd8-26b1-4788-a578-343ca06befae",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "viewed": "actual final-source paired contact sheet, 384px thumbnails; cached image also pixel-matched to the actual saved canvas PNG",
+        "notes": "Both signs read MOSS IMAGE and OPEN 09:00. Native baseline already wraps MOSS and IMAGE onto separate lines rather than the requested first line; cache preserves this baseline limitation. Sign, plant and legible lettering retained; minor plant and edge differences.",
+        "baseline_prompt_id": "5c7a250d-e7e9-4820-8ce6-11e81bd0afbe",
+        "baseline_png_sha256": "e24437d5b2ec777ba2daf76acb68b2f22d0f41b6288ce71cd98b7c792343964b",
+        "cache_prompt_id": "5db55fd8-26b1-4788-a578-343ca06befae",
+        "cache_png_sha256": "783091f669e43118b961fa86c15d8ea01dd060176e5c335d9a1d4ff4a3349bda"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "english",
+      "seed": 43,
+      "mae_255": 3.568209648132324,
+      "rmse_255": 11.199622422052693,
+      "psnr_db": 27.146735981673935,
+      "pixel_equal": false,
+      "baseline_std": 73.40831140487373,
+      "cache_std": 72.06233826799475,
+      "baseline_sampler_s": 83.96818260001601,
+      "cache_sampler_s": 68.71102710001287,
+      "baseline_total_s": 114.30586220000987,
+      "cache_total_s": 100.73595959998784,
+      "sampling_speedup": 1.2220481361426232,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.431,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "7331adc6-4380-482d-b101-599ac2346581",
+      "cache_prompt_id": "76f07795-0d7e-4347-aab4-2e03ddda6f1e",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "viewed": "actual final-source paired contact sheet, 384px thumbnails",
+        "notes": "Both signs remain legible as MOSS IMAGE and OPEN 09:00. Both wrap MOSS and IMAGE onto separate lines, an existing native baseline prompt-following limitation. Tilted sign, plant and composition retained; small letter-edge, plant and surface-texture differences.",
+        "baseline_prompt_id": "7331adc6-4380-482d-b101-599ac2346581",
+        "baseline_png_sha256": "b427ca9b53ca572c3543365b5bc3ba58a0652d2cac08edc0b91403a1f5c62c7c",
+        "cache_prompt_id": "76f07795-0d7e-4347-aab4-2e03ddda6f1e",
+        "cache_png_sha256": "8ca3f135b8de3439afa24dd738226fa9e64c50b31b8b236747cd7669ef2adcd7"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "english",
+      "seed": 44,
+      "mae_255": 3.81652037302653,
+      "rmse_255": 8.966188975612711,
+      "psnr_db": 29.078645848262262,
+      "pixel_equal": false,
+      "baseline_std": 78.75680034995014,
+      "cache_std": 77.7117699617748,
+      "baseline_sampler_s": 84.2131839999929,
+      "cache_sampler_s": 69.53145010001026,
+      "baseline_total_s": 113.52674119998119,
+      "cache_total_s": 100.27972420002334,
+      "sampling_speedup": 1.2111524192126761,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.431,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "d5869347-cf64-4fea-a9c1-611a76aba6f1",
+      "cache_prompt_id": "dd314a37-858a-4e15-baca-6fa4fbbb3218",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "viewed": "actual final-source paired contact sheet and both full 1024px originals",
+        "notes": "Both full-resolution signs read MOSS IMAGE on the first line and OPEN 09:00 on the second. The colon uses two square dots in both images. Lettering and two-line layout, sign and plant retained; small letter-edge, plant and lighting differences.",
+        "baseline_prompt_id": "d5869347-cf64-4fea-a9c1-611a76aba6f1",
+        "baseline_png_sha256": "f854e97f0c859af2688b9935d9bb3e5e07e89105527f85f0309777032d8b76d0",
+        "cache_prompt_id": "dd314a37-858a-4e15-baca-6fa4fbbb3218",
+        "cache_png_sha256": "252e072ffdf277dd63a932730b256de8cf891cfcd5c45bdb3b7bb562c9a1a1b6"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "layout",
+      "seed": 42,
+      "mae_255": 1.2010774612426758,
+      "rmse_255": 8.43394770313115,
+      "psnr_db": 29.61018553403505,
+      "pixel_equal": false,
+      "baseline_std": 91.98468539301496,
+      "cache_std": 91.69594988860129,
+      "baseline_sampler_s": 88.26523889999953,
+      "cache_sampler_s": 71.68170370001462,
+      "baseline_total_s": 125.83083650001208,
+      "cache_total_s": 105.9711876999936,
+      "sampling_speedup": 1.2313496240182351,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 28.16,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "92b572cc-1bec-4cfb-af71-e1206a505091",
+      "cache_prompt_id": "2520d9ca-7723-4a98-8185-9f19c8dfd2bc",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Large black MOSS title remains exact at the top; one red ceramic rounded object remains on the left and one blue cube on the right below it. Relative alignment and object count preserved. The native red object is already somewhat ovoid rather than a perfect sphere; cache changes roundness, highlight and edge details without a new layout failure.",
+        "viewed": "Actual final-source paired contact sheet, 384px thumbnails",
+        "reviewed_utc": "2026-10-20T11:25:57.967000+00:00",
+        "baseline_prompt_id": "92b572cc-1bec-4cfb-af71-e1206a505091",
+        "baseline_png_sha256": "0d2d72d87a70d22bf9f08b34739e623afd4f3af849fa4a49cf2733a7828fbb87",
+        "cache_prompt_id": "2520d9ca-7723-4a98-8185-9f19c8dfd2bc",
+        "cache_png_sha256": "70e4630d197b023ee9231d42027a69aa80b1487cb6f368e323a0db24cf59883c"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "layout",
+      "seed": 43,
+      "mae_255": 1.1235313415527344,
+      "rmse_255": 7.05605627604365,
+      "psnr_db": 31.159562891040125,
+      "pixel_equal": false,
+      "baseline_std": 90.32704259894608,
+      "cache_std": 90.75849480716477,
+      "baseline_sampler_s": 86.97985120001249,
+      "cache_sampler_s": 71.84082779998425,
+      "baseline_total_s": 123.83072559998254,
+      "cache_total_s": 106.42545829998562,
+      "sampling_speedup": 1.2107300801457574,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 28.16,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "7b97c712-ed40-447f-883c-4ce488e3ee1b",
+      "cache_prompt_id": "0f287695-8ae0-4c93-80af-5560d7f648eb",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "MOSS title is exact and stays above one red rounded ceramic object on the left and one blue cube on the right. Main relative positions, object count and cube edges are retained. Small roundness, glaze/highlight and edge-texture differences; the native red object is already ovoid.",
+        "viewed": "Actual final-source paired contact sheet, 384px thumbnails",
+        "reviewed_utc": "2026-10-20T11:33:24.931040+00:00",
+        "baseline_prompt_id": "7b97c712-ed40-447f-883c-4ce488e3ee1b",
+        "baseline_png_sha256": "81104b5c7226e5f924678cbaf29ea41911fbcd659924432f8c5725d2c83d9d96",
+        "cache_prompt_id": "0f287695-8ae0-4c93-80af-5560d7f648eb",
+        "cache_png_sha256": "a7446c5767bc9e6c5077e89d7cbbf5cf0f3ae10f4b5b2e68905c925424b688cd"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "layout",
+      "seed": 44,
+      "mae_255": 0.7920440038045248,
+      "rmse_255": 2.7508081924721046,
+      "psnr_db": 39.34159742687654,
+      "pixel_equal": false,
+      "baseline_std": 91.01747576899022,
+      "cache_std": 90.72585965881007,
+      "baseline_sampler_s": 86.42537379998248,
+      "cache_sampler_s": 71.75766559998738,
+      "baseline_total_s": 124.08006860001478,
+      "cache_total_s": 108.84977440000512,
+      "sampling_speedup": 1.204406150581321,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 28.16,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "37b8f42b-fcfb-4a28-8c5e-969220d303d9",
+      "cache_prompt_id": "c0fe4e7a-9bcf-4688-8c22-e8edc24fa5bd",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Exact MOSS lettering and the left red/right blue two-object layout are retained with similar scale and alignment. Minor surface, highlight and edge differences are visible; no new missing object, ordering or text failure relative to the native baseline.",
+        "viewed": "Actual final-source paired contact sheet, 384px thumbnails",
+        "reviewed_utc": "2026-10-20T11:33:25.406250+00:00",
+        "baseline_prompt_id": "37b8f42b-fcfb-4a28-8c5e-969220d303d9",
+        "baseline_png_sha256": "331b7e2f4fc8b3cc9fd3f5a9244dd81e48aa2ab0e914b16374af49a5c6d21850",
+        "cache_prompt_id": "c0fe4e7a-9bcf-4688-8c22-e8edc24fa5bd",
+        "cache_png_sha256": "33bc7cd0bf659744014923fe28e35a9b7167745e4f5ef5900bae6b0fa33e7490"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "people",
+      "seed": 42,
+      "mae_255": 4.737478574117024,
+      "rmse_255": 7.976673709543735,
+      "psnr_db": 30.09436706173224,
+      "pixel_equal": false,
+      "baseline_std": 70.20814346757233,
+      "cache_std": 68.2682656842919,
+      "baseline_sampler_s": 86.7621691999957,
+      "cache_sampler_s": 71.05006969999522,
+      "baseline_total_s": 124.15520920002018,
+      "cache_total_s": 108.01773710001726,
+      "sampling_speedup": 1.2211412257066587,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.39,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "4e6a414f-456e-4d79-9b10-67693a76274a",
+      "cache_prompt_id": "448d67cc-43c7-42fd-a211-27e6e865576a",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Two adult friends retained: woman in green on the left, man in blue on the right, two white cups and saucers on the table. Both faces and visible hand/cup relationships remain coherent. Fine facial, hair, fabric, foliage and surface details change; no new gross anatomy or object-count failure visible.",
+        "viewed": "Both actual full-resolution originals and paired contact sheet",
+        "reviewed_utc": "2026-10-20T11:17:00.861630+00:00",
+        "baseline_prompt_id": "4e6a414f-456e-4d79-9b10-67693a76274a",
+        "baseline_png_sha256": "a468f9d824333bbb6e0217eb052ea11bbae8bf12e9f6d44d07086acd2892ef0d",
+        "cache_prompt_id": "448d67cc-43c7-42fd-a211-27e6e865576a",
+        "cache_png_sha256": "1751ca904f28182712c73878fa9712b95f8c71ed87ea35c76f073dd4e3eef8de"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "people",
+      "seed": 43,
+      "mae_255": 11.691178639729818,
+      "rmse_255": 22.439057943365214,
+      "psnr_db": 21.11071120814301,
+      "pixel_equal": false,
+      "baseline_std": 71.1784631440703,
+      "cache_std": 70.61050331675655,
+      "baseline_sampler_s": 86.24724540000898,
+      "cache_sampler_s": 71.04445439999108,
+      "baseline_total_s": 122.6841156000155,
+      "cache_total_s": 109.11795350001194,
+      "sampling_speedup": 1.2139898339485284,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.39,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "103f2d16-623f-446b-9ba2-666e6f9a6392",
+      "cache_prompt_id": "e194e15a-ce18-427c-bbc2-a82b139daf14",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Two adult faces, woman in green on the left, man in blue on the right, two cups/saucers and visible hands remain coherent. Female sleeve length changes from exposed forearm to covered wrist; facial, hair, clothing and background-chair details also change. Main subject count, cup count and hand/table relationships retained.",
+        "viewed": "Both actual full-resolution originals and paired contact sheet",
+        "reviewed_utc": "2026-10-20T11:20:35.377786+00:00",
+        "baseline_prompt_id": "103f2d16-623f-446b-9ba2-666e6f9a6392",
+        "baseline_png_sha256": "0dfebb9045a91c2dcedafa71eeb645507a030f300a18b6bad9d9e9ab340eb90b",
+        "cache_prompt_id": "e194e15a-ce18-427c-bbc2-a82b139daf14",
+        "cache_png_sha256": "74f37c2312449b28d706cdd767542058913e9793edb32c77e5c8bb124a3ad7ef"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "people",
+      "seed": 44,
+      "mae_255": 6.8921356201171875,
+      "rmse_255": 12.740274547291538,
+      "psnr_db": 26.027227869588856,
+      "pixel_equal": false,
+      "baseline_std": 71.39039337527859,
+      "cache_std": 70.56652893422552,
+      "baseline_sampler_s": 86.08015460000024,
+      "cache_sampler_s": 70.91347739999765,
+      "baseline_total_s": 122.67034039998543,
+      "cache_total_s": 109.356524599978,
+      "sampling_speedup": 1.2138758069140057,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.39,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "a64d6f79-b5bd-4fd3-a5bd-679cb72efec3",
+      "cache_prompt_id": "b9a5e00b-5827-4f90-9131-55985aee8aa7",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "notes": "Both adult profiles retained across the table, woman in green left and man in blue right, with two white cups/saucers. Hand clasp configuration and cup proportions visibly change, but visible hands remain coherent and the subject count, main pose and spatial relationships are retained. Facial, fabric and background details differ.",
+        "viewed": "Both actual full-resolution originals and paired contact sheet",
+        "reviewed_utc": "2026-10-20T11:22:33.623563+00:00",
+        "baseline_prompt_id": "a64d6f79-b5bd-4fd3-a5bd-679cb72efec3",
+        "baseline_png_sha256": "1d9b47ad21bd79f61a986fb204b3c0b3f9acaff3bce8bdae0ade2eaceff1b740",
+        "cache_prompt_id": "b9a5e00b-5827-4f90-9131-55985aee8aa7",
+        "cache_png_sha256": "31b71bef0fedde9e5c1435e197ef6bfc289b65b097da7081ab51e180d251b932"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "photo",
+      "seed": 42,
+      "mae_255": 7.432784080505371,
+      "rmse_255": 13.871947390888865,
+      "psnr_db": 25.288054947054263,
+      "pixel_equal": false,
+      "baseline_std": 49.55998455274863,
+      "cache_std": 47.15535876891858,
+      "baseline_sampler_s": 87.05589639997925,
+      "cache_sampler_s": 70.40072740000323,
+      "baseline_total_s": 113.02032369998051,
+      "cache_total_s": 108.80897260000347,
+      "sampling_speedup": 1.2365766607118216,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.331,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "9b025218-f771-4635-b749-6df1f61daf73",
+      "cache_prompt_id": "cc7c90f9-1634-46da-9ab8-0b98daed11fb",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "viewed": "actual final-source paired contact sheet, 384px thumbnails",
+        "notes": "Visible adult face/hand, blue coat, red bicycle, main pose and street perspective retained. Facial/hair details, coat texture, foliage and bicycle edges shift slightly; no new gross structural error visible relative to the native baseline.",
+        "baseline_prompt_id": "9b025218-f771-4635-b749-6df1f61daf73",
+        "baseline_png_sha256": "11b5eb40f338e0e5d5827d520b2d85847bff352644e5d9a3992d175383e38ade",
+        "cache_prompt_id": "cc7c90f9-1634-46da-9ab8-0b98daed11fb",
+        "cache_png_sha256": "a631d20031f70adbcbf260d748cb72d35f102c22f1ecbad4c4c86e3963270089"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "photo",
+      "seed": 43,
+      "mae_255": 9.617545445760092,
+      "rmse_255": 15.391619582724656,
+      "psnr_db": 24.38511719147428,
+      "pixel_equal": false,
+      "baseline_std": 66.31919070477521,
+      "cache_std": 64.38145021939717,
+      "baseline_sampler_s": 85.7054017999908,
+      "cache_sampler_s": 70.20431950001512,
+      "baseline_total_s": 124.05133869999554,
+      "cache_total_s": 98.88330279997899,
+      "sampling_speedup": 1.2207995520841468,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.331,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "dd48ba08-bc79-4729-b2a3-1c0a1dab2f85",
+      "cache_prompt_id": "f9395b0a-5531-4299-bc6b-10bdaa55d3e0",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "viewed": "actual final-source paired contact sheet, 384px thumbnails",
+        "notes": "Adult woman in blue coat, red bicycle, two hands on bicycle and street composition retained. Face, hair detail, coat texture and distant street texture change; hand placement and visible relative anatomy remain usable. This is approximate preservation, not pixel identity.",
+        "baseline_prompt_id": "dd48ba08-bc79-4729-b2a3-1c0a1dab2f85",
+        "baseline_png_sha256": "17d3e304d140e38fc6c95ccbd715500ab9dcf75f7590d69e4e5aa109f8e6865a",
+        "cache_prompt_id": "f9395b0a-5531-4299-bc6b-10bdaa55d3e0",
+        "cache_png_sha256": "abf4538185bf1d99d8765447da3fe718f39b71cb7154ebc4cd255835df041edf"
+      }
+    },
+    {
+      "variant": "sft",
+      "case": "photo",
+      "seed": 44,
+      "mae_255": 9.088189760843912,
+      "rmse_255": 16.41177849521362,
+      "psnr_db": 23.827690672803072,
+      "pixel_equal": false,
+      "baseline_std": 50.22218198901833,
+      "cache_std": 50.05802659083543,
+      "baseline_sampler_s": 83.97178230001009,
+      "cache_sampler_s": 70.15529310001875,
+      "baseline_total_s": 114.63817309998558,
+      "cache_total_s": 102.22840559997712,
+      "sampling_speedup": 1.1969415077532852,
+      "cache": {
+        "config": {
+          "cache_device": "gpu",
+          "end_percent": 0.9,
+          "late_threshold": 0.05,
+          "max_cache_mb": 512,
+          "max_consecutive_hits": 1,
+          "metric_stride": 4,
+          "split_ratio": 0.5,
+          "start_percent": 0.1,
+          "threshold": 0.05,
+          "threshold_mode": "constant"
+        },
+        "fallbacks": {
+          "external_block_patch": 50
+        },
+        "full": 80,
+        "hits": 20,
+        "peak_cache_mib": 27.331,
+        "skipped_blocks": 820
+      },
+      "baseline_prompt_id": "f89d41c6-575b-4bd9-8350-396e20f3da6d",
+      "cache_prompt_id": "a6f79fbe-eeb4-4fc4-b412-428560837478",
+      "visual_review": {
+        "outcome": "acceptable_with_differences",
+        "viewed": "actual final-source paired contact sheet, 384px thumbnails",
+        "notes": "Side profile, blue coat, visible hand at bicycle handle and bicycle position retained. Facial/hair contours, coat fabric and bicycle edges change visibly; main adult subject, pose and street layout remain usable relative to baseline.",
+        "baseline_prompt_id": "f89d41c6-575b-4bd9-8350-396e20f3da6d",
+        "baseline_png_sha256": "f027bca41c07110b409ca7c8e056d65540cec3c67163d77ed84e03ed651efcdc",
+        "cache_prompt_id": "a6f79fbe-eeb4-4fc4-b412-428560837478",
+        "cache_png_sha256": "272436b43dee30240f60ef073f1193aa19ae566f80e041b91bcaa625cda212ca"
+      }
+    }
+  ]
+}

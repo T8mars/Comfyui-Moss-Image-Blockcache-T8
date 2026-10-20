@@ -1,0 +1,167 @@
+{
+  "1": {
+    "inputs": {
+      "unet_name": "moss_image_original_base_bf16.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "01 / Native MOSS BASE"
+    }
+  },
+  "2": {
+    "inputs": {
+      "clip_name": "moss_qwen35_9b_bf16_native.safetensors",
+      "type": "moss_image",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "02 / Qwen3.5 native text encoder"
+    }
+  },
+  "3": {
+    "inputs": {
+      "vae_name": "moss_image_official_vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "03 / MOSS VAE"
+    }
+  },
+  "4": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage",
+    "_meta": {
+      "title": "04 / Native 128-channel latent"
+    }
+  },
+  "5": {
+    "inputs": {
+      "text": "A clean studio photograph of a white enamel sign with large centered dark blue text exactly reading \"MOSS IMAGE\" on the first line and \"OPEN 09:00\" on the second line. A small green plant beside the sign, neutral wall, crisp typography.",
+      "clip": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "05 / Positive prompt"
+    }
+  },
+  "6": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "06 / Empty negative prompt"
+    }
+  },
+  "7": {
+    "inputs": {
+      "enabled": true,
+      "threshold": 0.05,
+      "start_percent": 0.1,
+      "end_percent": 0.9,
+      "max_consecutive_hits": 1,
+      "cache_device": "gpu",
+      "max_cache_mb": 512,
+      "metric_stride": 4,
+      "threshold_mode": "constant",
+      "split_ratio": 0.5,
+      "late_threshold": 0.05,
+      "model": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "MOSSImageBlockCacheT8",
+    "_meta": {
+      "title": "07 / T8 BlockCache / compare ON and OFF"
+    }
+  },
+  "8": {
+    "inputs": {
+      "double_layers": "",
+      "single_layers": "22",
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "SkipLayerGuidanceDiTSimple",
+    "_meta": {
+      "title": "08 / Negative-branch skip22"
+    }
+  },
+  "9": {
+    "inputs": {
+      "seed": 42,
+      "steps": 50,
+      "cfg": 3,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "8",
+        0
+      ],
+      "positive": [
+        "5",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "latent_image": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "09 / Native sampling / fixed seed"
+    }
+  },
+  "10": {
+    "inputs": {
+      "samples": [
+        "9",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "10 / Native VAE decode"
+    }
+  },
+  "11": {
+    "inputs": {
+      "filename_prefix": "MOSS_T8_BASE",
+      "images": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "11 / PNG includes this workflow"
+    }
+  }
+}

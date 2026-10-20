@@ -1,0 +1,13 @@
+# Keep the local roadmap out of GitHub.
+/roadmap.md
+/.local/
+/_reference/
+/artifacts/
+/dist/
+/validation/preview-summary.json
+__pycache__/
+.pytest_cache/
+*.pyc
+*.log
+.env
+.env.*
