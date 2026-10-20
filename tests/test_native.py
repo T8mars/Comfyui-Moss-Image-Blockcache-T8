@@ -195,7 +195,8 @@ def test_condition_shape_rope_and_time_invalidate(native, change):
 def test_sampling_runtime_is_local_and_cleared_even_on_cancel(error):
     config = CacheConfig()
     original = {"transformer_options": {KEY: config}}
-    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(), hook_patches={}, object_patches={})
+    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(), get_additional_models_with_key=lambda key: [],
+                              hook_patches={}, object_patches={})
     guider = SimpleNamespace(model_options=original, model_patcher=patcher, conds={"positive": []})
     captured = []
     def sample():
@@ -253,7 +254,8 @@ def test_cache_window_uses_effective_patcher_sampling_object(source):
 def test_latent_denoise_mask_is_forwarded_and_disables_reuse(native, positional, masked):
     mask = torch.ones(1, 1, 2, 2) if masked else None
     options = {"transformer_options": {KEY: CacheConfig(metric_stride=1)}}
-    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(), hook_patches={}, object_patches={})
+    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(), get_additional_models_with_key=lambda key: [],
+                              hook_patches={}, object_patches={})
     guider = SimpleNamespace(model_options=options, model_patcher=patcher, conds={"positive": []})
 
     def sample(*args, **kwargs):
@@ -275,7 +277,7 @@ def test_latent_denoise_mask_is_forwarded_and_disables_reuse(native, positional,
 @pytest.mark.parametrize("object_key", ["diffusion_model", "diffusion_model.layers.0"])
 def test_entire_model_and_nested_object_replacements_use_full_computation(object_key):
     options = {"transformer_options": {KEY: CacheConfig()}}
-    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(),
+    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(), get_additional_models_with_key=lambda key: [],
                               hook_patches={}, object_patches={object_key: object()})
     guider = SimpleNamespace(model_options=options, model_patcher=patcher, conds={"positive": []})
     def sample():
@@ -317,4 +319,63 @@ def test_install_is_clone_local_and_idempotent(native):
     assert not zero.get_wrappers(WrappersMP.OUTER_SAMPLE, KEY)
     assert not zero.get_wrappers(WrappersMP.DIFFUSION_MODEL, KEY)
     assert KEY not in zero.model_options["transformer_options"]
+
+
+def test_native_multigpu_configuration_does_not_inject_shared_runtime(native):
+    base = torch.nn.Module()
+    base.diffusion_model = native
+    base.model_sampling = Sampling()
+    base.model_dtype = lambda: torch.float32
+    patcher = comfy.model_patcher.ModelPatcher(base, torch.device("cpu"), torch.device("cpu"))
+    patcher.set_additional_models("multigpu", [patcher.clone()])
+    options = {"transformer_options": {KEY: CacheConfig()}}
+    guider = SimpleNamespace(model_options=options, model_patcher=patcher, conds={"positive": []})
+    marker = object()
+
+    def sample(*args, **kwargs):
+        assert args == (marker,) and kwargs == {"seed": 42}
+        assert guider.model_options is options
+        assert RUNTIME not in options["transformer_options"]
+        with torch.inference_mode():
+            x, context = torch.ones(1, 8, 2, 2), torch.ones(1, 3, 16)
+            transformer_options = {**options["transformer_options"], "multigpu_thread_device": torch.device("cpu")}
+            executor = WrapperExecutor.new_class_executor(native._forward, native, [diffusion_wrapper])
+            actual = executor.execute(x, torch.tensor([0.5]), context, transformer_options)
+            expected = native(x, torch.tensor([0.5]), context)
+        assert torch.equal(actual, expected)
+        return marker
+
+    executor = WrapperExecutor.new_class_executor(sample, guider, [sample_wrapper])
+    assert executor.execute(marker, seed=42) is marker
+    assert guider.model_options is options
+
+
+def test_install_ignores_another_clones_loaded_root_object_patch(native):
+    base = torch.nn.Module()
+    base.diffusion_model = native
+    base.model_dtype = lambda: torch.float32
+    owner = comfy.model_patcher.ModelPatcher(base, torch.device("cpu"), torch.device("cpu"))
+    other = owner.clone()
+    other.add_object_patch("diffusion_model", torch.nn.Identity())
+    try:
+        other.patch_model(load_weights=False)
+        assert not isinstance(base.diffusion_model, MOSSImage)
+        assert owner.get_model_object("diffusion_model") is native
+        cached = install(owner, CacheConfig())
+        assert cached.get_wrappers(WrappersMP.DIFFUSION_MODEL, KEY) == [diffusion_wrapper]
+        assert KEY not in owner.model_options["transformer_options"]
+    finally:
+        other.unpatch_model(unpatch_weights=False)
+    assert base.diffusion_model is native
+
+
+def test_install_rejects_owners_unloaded_non_moss_object_patch(native):
+    base = torch.nn.Module()
+    base.diffusion_model = native
+    base.model_dtype = lambda: torch.float32
+    owner = comfy.model_patcher.ModelPatcher(base, torch.device("cpu"), torch.device("cpu"))
+    owner.add_object_patch("diffusion_model", torch.nn.Identity())
+    assert base.diffusion_model is native
+    with pytest.raises(ValueError, match="native MOSS-Image MODEL"):
+        install(owner, CacheConfig())
 

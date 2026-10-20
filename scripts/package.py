@@ -91,6 +91,8 @@ def main():
     verify_summary(json.loads(summary.read_text(encoding="utf-8")))
     verify_workflows()
     files.append(summary)
+    files += sorted(p for p in (ROOT / "validation").glob("review-*.json")
+                    if re.fullmatch(r"review-\d+\.\d+\.\d+\.json", p.name))
     missing = [str(p.relative_to(ROOT)) for p in files if not p.is_file()]
     if missing:
         raise ValueError(f"Missing release files: {missing}")

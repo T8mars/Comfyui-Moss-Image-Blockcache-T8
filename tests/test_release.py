@@ -126,3 +126,19 @@ def test_package_filename_tracks_project_version(prepared):
     metadata.write_text('[project]\nversion = "9.8.7"\n', encoding="utf-8")
     release.main()
     assert (root / "dist/comfyui-moss-image-blockcache-T8-9.8.7.zip").is_file()
+
+
+def test_package_includes_versioned_review_link_targets(prepared):
+    root, _ = prepared
+    review = root / "validation/review-9.8.7.json"
+    review.write_text('{"version":"9.8.7","fixture":true}\n', encoding="utf-8")
+    (root / "validation/review-notes.json").write_text("Unpublished fixture notes", encoding="utf-8")
+    readme = root / "README.md"
+    with readme.open("a", encoding="utf-8") as file:
+        file.write("\n[Review](validation/review-9.8.7.json)\n")
+    release.main()
+    with zipfile.ZipFile(next((root / "dist").glob("*.zip"))) as archive:
+        target = "comfyui-moss-image-blockcache-T8/validation/review-9.8.7.json"
+        assert target in archive.namelist()
+        assert archive.read(target) == review.read_bytes()
+        assert not any(name.endswith("/review-notes.json") for name in archive.namelist())

@@ -56,7 +56,7 @@ Load Diffusion Model → MOSS Image Block Cache (T8)
 
 已验证原生 dense BF16 Base/SFT 文生图及 JSON Layout。完整权重 SFT 零阈值输出与原生基线逐像素一致；实测条件、有限样本耗时和逐组差异见 [BENCHMARKS.md](BENCHMARKS.md)。
 
-`0.1.2` 修复极端指标溢出和组合回退时的缓存清理，并补齐空流数量上限。画布与测速记录对应 `0.1.0`；本补丁经原生 CPU 回归验证，见 [检查记录](validation/review-0.1.2.json)。
+`0.1.3` 修正模型克隆对象识别，原生多 GPU 配置回退完整计算，并补齐手动安装包的检查附件。画布与测速记录对应 `0.1.0`；本补丁经原生 CPU 回归验证，见 [检查记录](validation/review-0.1.3.json)。
 
 缓存属于近似加速，可能改变面部、文字、手部、布局和细节。区域条件、Control、动态权重 hooks、外部 block patch 等不支持组合回退完整计算；原生负分支 skip22 保留，正分支仍可加速。请勿叠加其他缓存插件。量化、参考图编辑、编译、低显存 offload 和其他 GPU / dtype 不在本版实测范围。
 

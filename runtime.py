@@ -20,6 +20,9 @@ log = logging.getLogger(__name__)
 
 def sample_wrapper(executor, *args, **kwargs):
     guider = executor.class_obj
+    if guider.model_patcher.get_additional_models_with_key("multigpu"):
+        log.info("MOSS BlockCache T8: native full computation (multigpu)")
+        return executor(*args, **kwargs)
     original = guider.model_options
     local = comfy.model_patcher.create_model_options_clone(original)
     options = local["transformer_options"]
@@ -146,7 +149,7 @@ def block_patch(args, extra_args):
 
 
 def install(model, config, enabled=True):
-    if not isinstance(model.model.diffusion_model, MOSSImage):
+    if not isinstance(model.get_model_object("diffusion_model"), MOSSImage):
         raise ValueError("MOSS BlockCache T8 requires ComfyUI's native MOSS-Image MODEL")
     cloned = model.clone()
     for kind in (patches.WrappersMP.OUTER_SAMPLE, patches.WrappersMP.DIFFUSION_MODEL):

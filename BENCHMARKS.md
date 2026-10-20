@@ -1,6 +1,6 @@
 # 实测验证 / Measured validation — v0.1.0
 
-本报告的画布、画质与测速证据对应 `0.1.0`。后续补丁经原生 CPU 回归验证，未重复扩展跑图：[`0.1.1` 检查记录](validation/review-0.1.1.json)、[`0.1.2` 检查记录](validation/review-0.1.2.json)。
+本报告的画布、画质与测速证据对应 `0.1.0`。后续补丁经原生 CPU 回归验证，未重复扩展跑图：[`0.1.1` 检查记录](validation/review-0.1.1.json)、[`0.1.2` 检查记录](validation/review-0.1.2.json)、[`0.1.3` 检查记录](validation/review-0.1.3.json)。
 
 按用户要求采用有限验证，并已停止扩展跑图。完整 36 组矩阵、同 seed 重复计时和参数敏感性探测未完成，不作为本次交付的完成条件。
 

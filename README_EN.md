@@ -56,7 +56,7 @@ In constant mode, `threshold=0` disables reuse. In two-stage mode, also set `lat
 
 Validated with native dense BF16 Base/SFT text-to-image and JSON Layout. Full-weight SFT zero-threshold output matched the native baseline pixel for pixel. Conditions, finite-sample timings and reviewed differences are documented in [BENCHMARKS.md](BENCHMARKS.md).
 
-`0.1.2` fixes extreme metric overflow and cache invalidation with combined fallback conditions, and bounds empty streams. Canvas and timing records cover `0.1.0`; this patch uses native CPU regression checks. See the [review record](validation/review-0.1.2.json).
+`0.1.3` fixes model-clone object detection, bypasses caching for native multi-GPU configurations, and includes review attachments in manual packages. Canvas and timing records cover `0.1.0`; this patch uses native CPU regression checks. See the [review record](validation/review-0.1.3.json).
 
 Caching is approximate and may change faces, text, hands, layout and details. Unsupported combinations such as spatial conditioning, Control, scheduled weight hooks and external block patches use full computation. Native negative-branch skip22 is preserved; the positive branch can still benefit. Do not stack other cache plugins. Quantized weights, reference-image editing, compilation, low-memory offload, other GPUs and other dtypes are outside this release's measured scope.
 

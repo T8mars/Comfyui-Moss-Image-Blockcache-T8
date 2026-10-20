@@ -1,0 +1,55 @@
+{
+  "version": "0.1.3",
+  "created_utc": "2026-10-20T13:09:54.375603+00:00",
+  "review_rounds": 20,
+  "review_baseline_commit": "6b3c6f28a5ddde0d37fc39f011b4deb4661266a7",
+  "independent_fix_review": "passed",
+  "source_sha256": {
+    "__init__.py": "fa908e9150ec7f1855ee024f2276afb118e2a2a2dbf9ac0effe4c50037a8dd82",
+    "cache.py": "3ec2b78c60ffafcc84a7d5aef54716ddc476eaeabcf2355af919f2051d0544e0",
+    "runtime.py": "64e5c3c7f3827daca5869ec21283955826306dc00cdea1b5850e454520de7a19",
+    "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+  },
+  "fixes": [
+    {
+      "id": "native-multigpu-fallback",
+      "problem": "Native multi-GPU workers can share the same cache runtime. Concurrent stream iteration and insertion can raise OrderedDict mutated during iteration.",
+      "resolution": "At the sampling owner, bypass caching entirely when native multigpu additional models are configured; preserve original options, arguments, result and exceptions.",
+      "regression": "tests/test_native.py::test_native_multigpu_configuration_does_not_inject_shared_runtime",
+      "scope": "CPU controlled-thread reproduction and real ModelPatcher configuration checks; not a multi-GPU hardware or performance test."
+    },
+    {
+      "id": "effective-model-owner",
+      "problem": "An object patch loaded by another clone can change the physical model and cause a valid native MOSS owner to be rejected during node installation.",
+      "resolution": "Validate the effective diffusion model through ModelPatcher.get_model_object.",
+      "regressions": [
+        "tests/test_native.py::test_install_ignores_another_clones_loaded_root_object_patch",
+        "tests/test_native.py::test_install_rejects_owners_unloaded_non_moss_object_patch"
+      ],
+      "scope": "Reproduced with public clone/add_object_patch/patch_model APIs, without manually creating backup state."
+    },
+    {
+      "id": "manual-package-review-attachments",
+      "problem": "Manual ZIP packaging omitted versioned review JSON files referenced by the public README and benchmark report. Registry CLI packaging already included these files.",
+      "resolution": "Include public review-X.Y.Z.json records in the explicit manual package file list.",
+      "regression": "tests/test_release.py::test_package_includes_versioned_review_link_targets"
+    }
+  ],
+  "tests": {
+    "passed": 74,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "added_regressions": 4,
+    "scope": "CPU suite including real miniature native MOSS; no model weights required"
+  },
+  "image_validation": {
+    "version": "0.1.0",
+    "record": "summary.json",
+    "repeated_for_this_patch": false,
+    "scope": "Saved Base/SFT canvas and timing evidence remains tied to 0.1.0. No new large-model quality, timing, or multi-GPU measurements are claimed."
+  },
+  "prior_patch_review": "review-0.1.2.json",
+  "model_downloads": 0,
+  "additional_gpu_generation_runs": 0
+}
