@@ -105,3 +105,33 @@ def test_lru_budget_and_clear():
     r.clear()
     assert r.bytes() == 0
 
+
+@pytest.mark.parametrize("part", [0, 1])
+@pytest.mark.parametrize("ratio", [-1, 0.95])
+def test_finite_metric_reduction_overflow_cannot_allow_replay(part, ratio):
+    r = runtime()
+    previous = [torch.ones(1, 2, 2), torch.ones(1, 2, 2)]
+    previous[part] = torch.full((1, 2, 2), 2e38)
+    current = [value.clone() for value in previous]
+    current[part] *= ratio
+    assert all(bool(torch.isfinite(value).all()) for value in previous + current)
+    anchor = torch.ones(1, 4, 8)
+    stream = r.stream("test", 0.9)
+    r.store(stream, tuple(previous), anchor + 1, anchor)
+    assert math.isinf(r.difference(tuple(current), tuple(previous)))
+    assert r.replay(r.stream("test", 0.8), tuple(current), 0.8, anchor) is None
+    assert r.hits == 0
+
+
+def test_empty_streams_obey_lru_limit_before_history_is_stored():
+    r = runtime()
+    for index in range(8):
+        r.stream(index, 0.9)
+    r.stream(0, 0.8)
+    r.stream(8, 0.9)
+    assert len(r.streams) == 8 and 0 in r.streams and 1 not in r.streams
+    for index in range(9, 100):
+        r.stream(index, 0.9)
+    assert list(r.streams) == list(range(92, 100))
+    assert r.bytes() == 0
+

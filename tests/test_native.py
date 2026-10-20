@@ -151,6 +151,30 @@ def test_missing_condition_identity_uses_native_forward(native, extra):
     assert r.fallbacks == {"missing_condition_identity": 1}
 
 
+@pytest.mark.parametrize("extra", [
+    {"cond_or_uncond": None}, {"uuids": [None]}, {"cond_or_uncond": [0, 1]},
+    {"sigmas": torch.tensor([0.7, 0.6])},
+])
+def test_external_block_patch_cannot_hide_invalid_identity_or_sigma(native, extra):
+    r = CacheRuntime(CacheConfig(metric_stride=1), Sampling())
+    patched = []
+
+    def skip(args, extra_args):
+        patched.append(True)
+        return args
+
+    with torch.inference_mode():
+        invoke(native, r, 0.8)
+        invoke(native, r, 0.8, identity="negative")
+        assert len(r.streams) == 2
+        options = {**extra, "patches_replace": {"dit": {("single_block", 2): skip}}}
+        invoke(native, r, 0.7, extra=options)
+        assert patched and not r.streams
+        invoke(native, r, 0.6)
+    assert r.hits == 0
+    assert r.fallbacks == {"external_block_patch": 1}
+
+
 @pytest.mark.parametrize("change", ["identity", "text", "shape", "rope", "repeat", "increase"])
 def test_condition_shape_rope_and_time_invalidate(native, change):
     r = CacheRuntime(CacheConfig(metric_stride=1), Sampling())

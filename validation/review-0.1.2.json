@@ -1,0 +1,53 @@
+{
+  "version": "0.1.2",
+  "created_utc": "2026-10-20T12:59:05.017932+00:00",
+  "review_rounds": 20,
+  "review_baseline_commit": "50552dbe009d64298a63479af31d94d9fb14fb8a",
+  "independent_fix_review": "passed",
+  "source_sha256": {
+    "__init__.py": "fa908e9150ec7f1855ee024f2276afb118e2a2a2dbf9ac0effe4c50037a8dd82",
+    "cache.py": "3ec2b78c60ffafcc84a7d5aef54716ddc476eaeabcf2355af919f2051d0544e0",
+    "runtime.py": "e189aa44a718253541a08b7ae79bd019ccd31200d353e08a5e8720e4950951e9",
+    "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+  },
+  "fixes": [
+    {
+      "id": "finite-metric-overflow",
+      "problem": "Finite extreme FP32 values can overflow mean reductions. A NaN text score was ignored by partition max, or an infinite denominator reduced the score to zero, allowing replay.",
+      "resolution": "Reject nonfinite delta/scale reductions and nonfinite partition scores before aggregation.",
+      "regression": "tests/test_cache.py::test_finite_metric_reduction_overflow_cannot_allow_replay",
+      "scope": "Numerical safety boundary; no claim that normal BF16 workflow images were corrupted."
+    },
+    {
+      "id": "combined-fallback-invalidation",
+      "problem": "An external block-patch fallback could hide invalid condition identity or sigma and retain history after an untrusted call.",
+      "resolution": "Validate identity and sigma independently of the primary fallback reason; clear all history when either is untrusted.",
+      "regression": "tests/test_native.py::test_external_block_patch_cannot_hide_invalid_identity_or_sigma",
+      "scope": "Confirmed with a real miniature native MOSS block replacement; standard complete-identity CFG behavior remains covered."
+    },
+    {
+      "id": "empty-stream-bound",
+      "problem": "Streams without stored tensor history could bypass the existing eight-stream limit. Retained tensor history was already bounded.",
+      "resolution": "Apply the eight-stream LRU limit at stream insertion and retain the separate byte budget on store.",
+      "regression": "tests/test_cache.py::test_empty_streams_obey_lru_limit_before_history_is_stored",
+      "scope": "Low-impact metadata bound; not a claim of a demonstrated large tensor leak."
+    }
+  ],
+  "tests": {
+    "passed": 70,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "added_regressions": 9,
+    "scope": "CPU suite including real miniature native MOSS; no model weights required"
+  },
+  "image_validation": {
+    "version": "0.1.0",
+    "record": "summary.json",
+    "repeated_for_this_patch": false,
+    "scope": "Saved Base/SFT canvas and timing evidence remains tied to 0.1.0. This release adds no new large-model quality or speed measurement."
+  },
+  "prior_patch_review": "review-0.1.1.json",
+  "model_downloads": 0,
+  "additional_gpu_generation_runs": 0
+}

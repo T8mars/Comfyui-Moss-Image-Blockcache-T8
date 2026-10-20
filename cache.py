@@ -86,6 +86,9 @@ class CacheRuntime:
             stream.clear()
         stream.sigma = sigma
         self.streams[key] = stream
+        if len(self.streams) > 8:
+            self.streams.popitem(last=False)
+            self.fallback("cache_budget")
         return stream
 
     def copy(self, value):
@@ -106,8 +109,14 @@ class CacheRuntime:
         for a, b in zip(current, previous):
             if a.shape != b.shape:
                 return math.inf
-            score = (a - b).abs().mean((1, 2)) / b.abs().mean((1, 2)).clamp_min(1e-6)
-            scores.append(float(score.max()))
+            delta = (a - b).abs().mean((1, 2))
+            scale = b.abs().mean((1, 2))
+            score = delta / scale.clamp_min(1e-6)
+            score = torch.where(torch.isfinite(delta) & torch.isfinite(scale), score, math.inf)
+            worst = float(score.max())
+            if not math.isfinite(worst):
+                return math.inf
+            scores.append(worst)
         return max(scores, default=math.inf)
 
     def replay(self, stream, indicator, sigma, anchor):
@@ -136,7 +145,7 @@ class CacheRuntime:
         stream.tail = tail
         stream.indicator = indicator
         stream.consecutive = 0
-        while self.streams and (self.bytes() > self.budget or len(self.streams) > 8):
+        while self.streams and self.bytes() > self.budget:
             self.streams.popitem(last=False)
             self.fallback("cache_budget")
         self.peak_bytes = max(self.peak_bytes, self.bytes())

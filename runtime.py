@@ -61,10 +61,6 @@ def unsupported(options, kwargs):
         return "external_diffusion_wrapper"
     if kwargs.get("control") is not None:
         return "control"
-    uuids = options.get("uuids")
-    branches = options.get("cond_or_uncond")
-    if not uuids or not branches or len(uuids) != len(branches) or any(u is None for u in uuids):
-        return "missing_condition_identity"
     return None
 
 
@@ -74,27 +70,31 @@ def diffusion_wrapper(executor, x, timestep, context, transformer_options=None, 
     if runtime is None:
         return executor(x, timestep, context, options, **kwargs)
     reason = unsupported(options, kwargs)
+    uuids = options.get("uuids")
+    branches = options.get("cond_or_uncond")
+    identity = None
+    if uuids and branches and len(uuids) == len(branches) and all(u is not None for u in uuids):
+        identity = (tuple(map(str, uuids)), tuple(branches))
+    if identity is None:
+        reason = reason or "missing_condition_identity"
     sigmas = options.get("sigmas")
     sigma = float(sigmas.flatten()[0]) if isinstance(sigmas, torch.Tensor) and sigmas.numel() else None
-    if sigma is None or not math.isfinite(sigma) or not bool((sigmas == sigma).all()):
+    valid_sigma = sigma is not None and math.isfinite(sigma) and bool((sigmas == sigma).all())
+    if not valid_sigma:
         reason = reason or "nonuniform_sigma"
     runtime.full += 1
     if reason:
         runtime.fallback(reason)
-        identity = (tuple(map(str, options.get("uuids") or [])), tuple(options.get("cond_or_uncond") or []))
-        if reason in ("nonuniform_sigma", "missing_condition_identity"):
+        if identity is None or not valid_sigma:
             runtime.clear()
-        elif identity[0]:
+        else:
             affected = set(zip(*identity))
             for key in list(runtime.streams):
                 if affected.intersection(zip(key[0], key[1])):
                     runtime.streams.pop(key)
-        else:
-            runtime.clear()
         return executor(x, timestep, context, options, **kwargs)
     rope = options.get("rope_options", {})
-    key = (tuple(map(str, options["uuids"])), tuple(options["cond_or_uncond"]),
-           tuple(x.shape), tuple(context.shape), x.dtype, x.device, tuple(sorted(rope.items())))
+    key = (*identity, tuple(x.shape), tuple(context.shape), x.dtype, x.device, tuple(sorted(rope.items())))
     stream = runtime.stream(key, sigma)
     if not runtime.active(sigma):
         stream.clear()
