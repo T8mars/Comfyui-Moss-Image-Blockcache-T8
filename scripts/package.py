@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import re
 import zipfile
 
 from PIL import Image
@@ -99,7 +100,11 @@ def main():
             if required not in files:
                 raise ValueError(f"Missing verified workflow: {required.name}")
     folder = "comfyui-moss-image-blockcache-T8"
-    target = ROOT / "dist" / f"{folder}-0.1.0.zip"
+    version = re.search(r'^version\s*=\s*"(\d+\.\d+\.\d+)"\s*$',
+                        (ROOT / "pyproject.toml").read_text(encoding="utf-8"), re.MULTILINE)
+    if version is None:
+        raise ValueError("A three-part project version is required")
+    target = ROOT / "dist" / f"{folder}-{version.group(1)}.zip"
     target.parent.mkdir(exist_ok=True)
     with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as archive:
         for file in files:

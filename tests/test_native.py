@@ -171,7 +171,7 @@ def test_condition_shape_rope_and_time_invalidate(native, change):
 def test_sampling_runtime_is_local_and_cleared_even_on_cancel(error):
     config = CacheConfig()
     original = {"transformer_options": {KEY: config}}
-    patcher = SimpleNamespace(model=SimpleNamespace(model_sampling=Sampling()), hook_patches={}, object_patches={})
+    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(), hook_patches={}, object_patches={})
     guider = SimpleNamespace(model_options=original, model_patcher=patcher, conds={"positive": []})
     captured = []
     def sample():
@@ -194,10 +194,64 @@ def test_sampling_runtime_is_local_and_cleared_even_on_cancel(error):
     assert RUNTIME not in original["transformer_options"]
 
 
+@pytest.mark.parametrize("source", ["default", "object_patch", "loaded_other_clone"])
+def test_cache_window_uses_effective_patcher_sampling_object(source):
+    from comfy.model_sampling import ModelSamplingDiscreteFlow
+
+    base = torch.nn.Module()
+    original = ModelSamplingDiscreteFlow()
+    original.set_parameters(shift=5, multiplier=1)
+    replacement = ModelSamplingDiscreteFlow()
+    replacement.set_parameters(shift=1, multiplier=1)
+    base.model_sampling = original
+    patcher = comfy.model_patcher.ModelPatcher(base, torch.device("cpu"), torch.device("cpu"))
+    expected = original
+    if source == "object_patch":
+        patcher.add_object_patch("model_sampling", replacement)
+        expected = replacement
+    elif source == "loaded_other_clone":
+        patcher.object_patches_backup["model_sampling"] = original
+        base.model_sampling = replacement
+    options = {"transformer_options": {KEY: CacheConfig()}}
+    guider = SimpleNamespace(model_options=options, model_patcher=patcher, conds={"positive": []})
+
+    def inspect_window():
+        runtime = guider.model_options["transformer_options"][RUNTIME]
+        return runtime.start, runtime.end, runtime.split
+
+    actual = WrapperExecutor.new_class_executor(inspect_window, guider, [sample_wrapper]).execute()
+    assert actual == tuple(expected.percent_to_sigma(p) for p in (0.1, 0.9, 0.5))
+    assert guider.model_options is options
+
+
+@pytest.mark.parametrize("positional", [False, True])
+@pytest.mark.parametrize("masked", [False, True])
+def test_latent_denoise_mask_is_forwarded_and_disables_reuse(native, positional, masked):
+    mask = torch.ones(1, 1, 2, 2) if masked else None
+    options = {"transformer_options": {KEY: CacheConfig(metric_stride=1)}}
+    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(), hook_patches={}, object_patches={})
+    guider = SimpleNamespace(model_options=options, model_patcher=patcher, conds={"positive": []})
+
+    def sample(*args, **kwargs):
+        assert kwargs.get("denoise_mask", args[4] if len(args) > 4 else None) is mask
+        local = guider.model_options["transformer_options"]
+        runtime = local[RUNTIME]
+        extra = {FRAME: local[FRAME]} if FRAME in local else None
+        with torch.inference_mode():
+            invoke(native, runtime, 0.8, extra=extra)
+            invoke(native, runtime, 0.7, extra=extra)
+        return runtime.hits, runtime.full, runtime.fallbacks
+
+    executor = WrapperExecutor.new_class_executor(sample, guider, [sample_wrapper])
+    result = executor.execute(None, None, None, None, mask) if positional else executor.execute(denoise_mask=mask)
+    assert result == ((0, 2, {"unsupported_conditioning": 2}) if masked else (1, 1, {}))
+    assert guider.model_options is options
+
+
 @pytest.mark.parametrize("object_key", ["diffusion_model", "diffusion_model.layers.0"])
 def test_entire_model_and_nested_object_replacements_use_full_computation(object_key):
     options = {"transformer_options": {KEY: CacheConfig()}}
-    patcher = SimpleNamespace(model=SimpleNamespace(model_sampling=Sampling()),
+    patcher = SimpleNamespace(get_model_object=lambda name: Sampling(),
                               hook_patches={}, object_patches={object_key: object()})
     guider = SimpleNamespace(model_options=options, model_patcher=patcher, conds={"positive": []})
     def sample():

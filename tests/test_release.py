@@ -86,19 +86,43 @@ def test_package_rejects_wrong_canvas_configuration(prepared):
         release.verify_workflows()
 
 
-def test_finite_acceptance_uses_real_canvas_and_actual_pair_count(prepared):
-    root, _ = prepared
-    summary = json.loads((ROOT / "validation/summary.json").read_text(encoding="utf-8"))
-    assert summary["validation_scope"] == "user_approved_finite"
+@pytest.fixture
+def finite_summary(prepared):
+    root, summary = prepared
+    summary.update(validation_scope="user_approved_finite", complete_36_pair_matrix=False)
+    summary["rows"] = summary["rows"][:2]
+    for row in summary["rows"]:
+        row["visual_review"] = {"outcome": "acceptable_with_differences", "notes": "Test fixture only"}
+    summary["manual_review"]["reviewed_pairs"] = 2
+    summary["tests"] = {"passed": 51, "failures_errors_skips": 0}
+    summary["zero_threshold_parity"] = {"pixel_equal": True}
+    summary["cuda_smoke"] = {"status": "passed", "source_sha256": summary["source_sha256"]}
+    summary["canvas"] = {
+        variant: {"status": "success", "frontend_origin": "comfyui-frontend",
+                  "source_sha256": summary["source_sha256"],
+                  "png_sha256": hashlib.sha256((root / "workflows" / f"MOSS_T8_{variant.upper()}_1024_BlockCache.png").read_bytes()).hexdigest()}
+        for variant in ("base", "sft")}
+    return summary
+
+
+def test_finite_acceptance_uses_real_canvas_and_actual_pair_count(finite_summary):
+    summary = finite_summary
     release.verify_summary(summary)
     summary["canvas"]["base"]["png_sha256"] = "stale-image"
     with pytest.raises(ValueError, match="real canvas evidence"):
         release.verify_summary(summary)
 
 
-def test_finite_acceptance_rejects_false_full_matrix_claim(prepared):
-    _, _ = prepared
-    summary = json.loads((ROOT / "validation/summary.json").read_text(encoding="utf-8"))
+def test_finite_acceptance_rejects_false_full_matrix_claim(finite_summary):
+    summary = finite_summary
     summary["complete_36_pair_matrix"] = True
     with pytest.raises(ValueError, match="actual unique reviewed pairs"):
         release.verify_summary(summary)
+
+
+def test_package_filename_tracks_project_version(prepared):
+    root, _ = prepared
+    metadata = root / "pyproject.toml"
+    metadata.write_text('[project]\nversion = "9.8.7"\n', encoding="utf-8")
+    release.main()
+    assert (root / "dist/comfyui-moss-image-blockcache-T8-9.8.7.zip").is_file()

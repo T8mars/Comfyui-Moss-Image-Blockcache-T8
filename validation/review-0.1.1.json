@@ -1,0 +1,73 @@
+{
+  "version": "0.1.1",
+  "created_utc": "2026-10-20T12:48:33.499711+00:00",
+  "review_rounds": 20,
+  "independent_agent_fix_review": "passed",
+  "source_sha256": {
+    "__init__.py": "fa908e9150ec7f1855ee024f2276afb118e2a2a2dbf9ac0effe4c50037a8dd82",
+    "cache.py": "80c719cea148642fb6229df44cc677d2af4cfbcdeb4b8abc4e148442aef984f8",
+    "runtime.py": "ca6bd2a8d751226777a2a29a95acc80ff109eedd045afefe3e4bf0e1f7c66ef3",
+    "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+  },
+  "fixes": [
+    {
+      "id": "sampling-window",
+      "problem": "Cache windows read the shared original sampling object before patches were loaded, ignoring effective sampling shifts and clone backups.",
+      "resolution": "Resolve model_sampling through ModelPatcher.get_model_object.",
+      "regression": "tests/test_native.py::test_cache_window_uses_effective_patcher_sampling_object",
+      "cases": [
+        "default native schedule",
+        "unloaded object patch",
+        "sampling object backed up while another clone is loaded"
+      ]
+    },
+    {
+      "id": "latent-noise-mask",
+      "problem": "Latent denoise_mask could bypass the execution-wide unsupported-conditioning fallback. No image corruption is claimed from this reproduction.",
+      "resolution": "Use full computation for non-None keyword or positional denoise_mask; forward arguments unchanged.",
+      "regression": "tests/test_native.py::test_latent_denoise_mask_is_forwarded_and_disables_reuse",
+      "cases": [
+        "keyword mask",
+        "positional mask",
+        "keyword None",
+        "positional None"
+      ]
+    },
+    {
+      "id": "archive-version",
+      "problem": "The development packaging script hardcoded 0.1.0 in archive filenames.",
+      "resolution": "Read the three-part version from pyproject.toml.",
+      "regression": "tests/test_release.py::test_package_filename_tracks_project_version"
+    }
+  ],
+  "tests": {
+    "passed": 61,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "scope": "CPU tests, including real miniature native MOSS; no model weights required"
+  },
+  "compatibility": {
+    "node_id_unchanged": true,
+    "default_cache_parameters_unchanged": true,
+    "native_loop_and_output_head_unchanged": true,
+    "no_runtime_dependencies_added": true
+  },
+  "prior_image_validation": {
+    "version": "0.1.0",
+    "record": "summary.json",
+    "source_sha256": {
+      "cache.py": "80c719cea148642fb6229df44cc677d2af4cfbcdeb4b8abc4e148442aef984f8",
+      "runtime.py": "864857c941d830ad1fb839942eb046d3880c5f9c4a5fd79d5617a803712eb696",
+      "nodes.py": "47d02379ea075f42a01438a24c140917a617062f9f8228c6cf6d7765efa8d0e7"
+    },
+    "canvas_variants": [
+      "base",
+      "sft"
+    ],
+    "repeated_for_this_patch": false,
+    "scope": "Existing Base/SFT canvas workflows and timings belong to 0.1.0. This patch uses targeted native CPU regression checks; no new quality or speed measurement is claimed."
+  },
+  "model_downloads": 0,
+  "additional_gpu_generation_runs": 0
+}

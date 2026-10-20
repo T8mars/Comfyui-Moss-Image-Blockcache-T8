@@ -23,11 +23,12 @@ def sample_wrapper(executor, *args, **kwargs):
     original = guider.model_options
     local = comfy.model_patcher.create_model_options_clone(original)
     options = local["transformer_options"]
-    runtime = CacheRuntime(options[KEY], guider.model_patcher.model.model_sampling)
+    runtime = CacheRuntime(options[KEY], guider.model_patcher.get_model_object("model_sampling"))
     options[RUNTIME] = runtime
     # Conditions with a changing spatial or weight meaning need their original execution.
     unsafe = {"area", "mask", "control", "gligen", "hooks"}
-    restricted = any(unsafe.intersection(c) for cond in guider.conds.values() for c in cond)
+    denoise_mask = kwargs.get("denoise_mask", args[4] if len(args) > 4 else None)
+    restricted = denoise_mask is not None or any(unsafe.intersection(c) for cond in guider.conds.values() for c in cond)
     if restricted or guider.model_patcher.hook_patches:
         options[FRAME] = "unsupported_conditioning"
     elif local.get("model_function_wrapper") is not None or patches.get_all_wrappers(patches.WrappersMP.APPLY_MODEL, options):
