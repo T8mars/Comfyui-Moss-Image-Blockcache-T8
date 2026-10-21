@@ -237,7 +237,7 @@ def test_cache_window_uses_effective_patcher_sampling_object(source):
     elif source == "loaded_other_clone":
         patcher.object_patches_backup["model_sampling"] = original
         base.model_sampling = replacement
-    options = {"transformer_options": {KEY: CacheConfig()}}
+    options = {"transformer_options": {KEY: CacheConfig(split_ratio=0.5)}}
     guider = SimpleNamespace(model_options=options, model_patcher=patcher, conds={"positive": []})
 
     def inspect_window():

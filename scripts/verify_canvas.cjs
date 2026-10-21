@@ -63,9 +63,9 @@ const resumeId = resumeIndex < 0 ? null : process.argv[resumeIndex + 1];
         }, [380, 240]);
         const negative = node('CLIPTextEncode', '06 / Empty negative prompt', [440, 370], {text: ''}, [380, 150]);
         const cache = node('MOSSImageBlockCacheT8', '07 / T8 BlockCache / compare ON and OFF', [440, 600], {
-          enabled: true, threshold: 0.05, start_percent: 0.10, end_percent: 0.90, max_consecutive_hits: 1,
+          enabled: true, threshold: 0.08, start_percent: 0.10, end_percent: 0.90, max_consecutive_hits: 1,
           cache_device: 'gpu', max_cache_mb: 512, metric_stride: 4,
-          threshold_mode: 'constant', split_ratio: 0.5, late_threshold: 0.05
+          threshold_mode: 'constant', split_ratio: 0.30, late_threshold: 0.14
         }, [380, 360]);
         const slg = node('SkipLayerGuidanceDiTSimple', '08 / Negative-branch skip22', [890, 640], {
           double_layers: '', single_layers: '22', start_percent: 0, end_percent: 1

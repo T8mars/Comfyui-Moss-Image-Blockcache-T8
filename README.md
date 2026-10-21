@@ -20,7 +20,7 @@ git clone https://github.com/T8mars/Comfyui-Moss-Image-Blockcache-T8.git comfyui
 
 ## 工作流
 
-Base、SFT 均已在真实 ComfyUI 画布运行，JSON 和生成图片内的工作流已重新导入验证。
+Base、SFT 均已有真实 ComfyUI 画布运行记录。JSON 和 PNG 内嵌工作流已更新为当前默认参数；PNG 预览保留此前出图结果。
 
 | 模型 | 画布工作流 | 内嵌工作流的图片 |
 |---|---|---|
@@ -43,12 +43,13 @@ Load Diffusion Model → MOSS Image Block Cache (T8)
 | 参数 | 默认值与说明 |
 |---|---|
 | `enabled` | 关闭后完整透传，便于与原生基线对照 |
-| `threshold` | `0.05`；越大越容易复用，也越可能改变文字、人物和细节 |
+| `threshold` | `0.08`；越大越容易复用，也越可能改变文字、人物和细节 |
 | `start_percent` / `end_percent` | `0.10 / 0.90`；区间外完整计算 |
 | `max_consecutive_hits` | `1`；命中后强制刷新 |
 | `cache_device` | `gpu`；`cpu` 用传输开销换取较低的缓存显存占用 |
 | `max_cache_mb` / `metric_stride` | `512 MiB / 4`；限制保留缓存与指标采样间隔 |
 | `threshold_mode` | `constant`；可选 `two_stage`，配合 `split_ratio`、`late_threshold` 调整后段阈值 |
+| `split_ratio` / `late_threshold` | `0.30 / 0.14`；仅在 `two_stage` 模式生效 |
 
 固定阈值模式下 `threshold=0` 禁用缓存；两段模式还需将 `late_threshold` 置零，或直接关闭 `enabled`。缓存预算不等于整条工作流的显存上限。
 
@@ -56,7 +57,7 @@ Load Diffusion Model → MOSS Image Block Cache (T8)
 
 已验证原生 dense BF16 Base/SFT 文生图及 JSON Layout。完整权重 SFT 零阈值输出与原生基线逐像素一致；实测条件、有限样本耗时和逐组差异见 [BENCHMARKS.md](BENCHMARKS.md)。
 
-`0.1.3` 修正模型克隆对象识别，原生多 GPU 配置回退完整计算，并补齐手动安装包的检查附件。画布与测速记录对应 `0.1.0`；本补丁经原生 CPU 回归验证，见 [检查记录](validation/review-0.1.3.json)。
+`0.1.4` 按用户已测试的设置更新默认参数；未追加 GPU 跑图。既有画布图片与测速记录对应 `0.1.0`，不代表新默认参数的重新测量。此前修复见 [检查记录](validation/review-0.1.3.json)。
 
 缓存属于近似加速，可能改变面部、文字、手部、布局和细节。区域条件、Control、动态权重 hooks、外部 block patch 等不支持组合回退完整计算；原生负分支 skip22 保留，正分支仍可加速。请勿叠加其他缓存插件。量化、参考图编辑、编译、低显存 offload 和其他 GPU / dtype 不在本版实测范围。
 

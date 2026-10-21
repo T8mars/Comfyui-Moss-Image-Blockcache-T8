@@ -69,7 +69,7 @@
   "7": {
     "inputs": {
       "enabled": true,
-      "threshold": 0.05,
+      "threshold": 0.08,
       "start_percent": 0.1,
       "end_percent": 0.9,
       "max_consecutive_hits": 1,
@@ -77,8 +77,8 @@
       "max_cache_mb": 512,
       "metric_stride": 4,
       "threshold_mode": "constant",
-      "split_ratio": 0.5,
-      "late_threshold": 0.05,
+      "split_ratio": 0.3,
+      "late_threshold": 0.14,
       "model": [
         "1",
         0

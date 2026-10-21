@@ -20,7 +20,7 @@ The plugin does not download, convert or modify models. If custom nodes are rest
 
 ## Workflows
 
-Both Base and SFT were run through the real ComfyUI canvas. The saved JSON and generated PNG workflows were imported back for verification.
+Both Base and SFT have real ComfyUI canvas run records. JSON and embedded PNG workflows use the current defaults; PNG previews retain the earlier generated images.
 
 | Model | Canvas workflow | Image with embedded workflow |
 |---|---|---|
@@ -43,12 +43,13 @@ Find the node under `T8/MOSS-Image`. Its input and output use the standard `MODE
 | Parameter | Default and behavior |
 |---|---|
 | `enabled` | Disable to pass the model through for a native baseline |
-| `threshold` | `0.05`; higher values allow more reuse and may change text, faces and details |
+| `threshold` | `0.08`; higher values allow more reuse and may change text, faces and details |
 | `start_percent` / `end_percent` | `0.10 / 0.90`; compute fully outside this interval |
 | `max_consecutive_hits` | `1`; force a refresh after a hit |
 | `cache_device` | `gpu`; `cpu` trades transfer overhead for lower retained GPU cache usage |
 | `max_cache_mb` / `metric_stride` | `512 MiB / 4`; retained-cache budget and metric subsampling interval |
 | `threshold_mode` | `constant`; optional `two_stage` uses `split_ratio` and `late_threshold` |
+| `split_ratio` / `late_threshold` | `0.30 / 0.14`; used only in `two_stage` mode |
 
 In constant mode, `threshold=0` disables reuse. In two-stage mode, also set `late_threshold=0`, or disable `enabled`. The cache budget is not a total workflow VRAM limit.
 
@@ -56,7 +57,7 @@ In constant mode, `threshold=0` disables reuse. In two-stage mode, also set `lat
 
 Validated with native dense BF16 Base/SFT text-to-image and JSON Layout. Full-weight SFT zero-threshold output matched the native baseline pixel for pixel. Conditions, finite-sample timings and reviewed differences are documented in [BENCHMARKS.md](BENCHMARKS.md).
 
-`0.1.3` fixes model-clone object detection, bypasses caching for native multi-GPU configurations, and includes review attachments in manual packages. Canvas and timing records cover `0.1.0`; this patch uses native CPU regression checks. See the [review record](validation/review-0.1.3.json).
+`0.1.4` adopts the user-tested default settings without additional GPU generation. Existing canvas images and timings cover `0.1.0`, not a new measurement of these defaults. Earlier fixes are documented in the [review record](validation/review-0.1.3.json).
 
 Caching is approximate and may change faces, text, hands, layout and details. Unsupported combinations such as spatial conditioning, Control, scheduled weight hooks and external block patches use full computation. Native negative-branch skip22 is preserved; the positive branch can still benefit. Do not stack other cache plugins. Quantized weights, reference-image editing, compilation, low-memory offload, other GPUs and other dtypes are outside this release's measured scope.
 

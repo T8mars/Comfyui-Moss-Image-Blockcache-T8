@@ -14,7 +14,7 @@ class MOSSImageBlockCacheT8(io.ComfyNode):
             inputs=[
                 io.Model.Input("model"),
                 io.Boolean.Input("enabled", default=True),
-                io.Float.Input("threshold", default=0.05, min=0.0, max=1.0, step=0.005,
+                io.Float.Input("threshold", default=0.08, min=0.0, max=1.0, step=0.005,
                                tooltip="0 disables residual reuse. Compare with the same native workflow without caching."),
                 io.Float.Input("start_percent", default=0.10, min=0.0, max=1.0, step=0.01),
                 io.Float.Input("end_percent", default=0.90, min=0.0, max=1.0, step=0.01),
@@ -23,16 +23,16 @@ class MOSSImageBlockCacheT8(io.ComfyNode):
                 io.Int.Input("max_cache_mb", default=512, min=16, max=32768, advanced=True),
                 io.Int.Input("metric_stride", default=4, min=1, max=32, advanced=True),
                 io.Combo.Input("threshold_mode", options=["constant", "two_stage"], default="constant", advanced=True),
-                io.Float.Input("split_ratio", default=0.5, min=0.0, max=1.0, step=0.01, advanced=True),
-                io.Float.Input("late_threshold", default=0.05, min=0.0, max=1.0, step=0.005, advanced=True),
+                io.Float.Input("split_ratio", default=0.30, min=0.0, max=1.0, step=0.01, advanced=True),
+                io.Float.Input("late_threshold", default=0.14, min=0.0, max=1.0, step=0.005, advanced=True),
             ],
             outputs=[io.Model.Output()],
         )
 
     @classmethod
-    def execute(cls, model, enabled=True, threshold=0.05, start_percent=0.10, end_percent=0.90,
+    def execute(cls, model, enabled=True, threshold=0.08, start_percent=0.10, end_percent=0.90,
                 max_consecutive_hits=1, cache_device="gpu", max_cache_mb=512, metric_stride=4,
-                threshold_mode="constant", split_ratio=0.5, late_threshold=0.05):
+                threshold_mode="constant", split_ratio=0.30, late_threshold=0.14):
         config = CacheConfig(threshold, start_percent, end_percent, max_consecutive_hits, cache_device,
                              metric_stride, max_cache_mb, threshold_mode, split_ratio, late_threshold)
         return io.NodeOutput(install(model, config, enabled))

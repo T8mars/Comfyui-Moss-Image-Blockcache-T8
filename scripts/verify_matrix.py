@@ -18,7 +18,7 @@ def main():
     p.add_argument("--seeds", default="42,43,44")
     p.add_argument("--cases", default=",".join(PROMPTS))
     p.add_argument("--variants", default="sft,base")
-    p.add_argument("--threshold", type=float, default=0.05)
+    p.add_argument("--threshold", type=float, default=0.08)
     p.add_argument("--deployment", type=Path)
     args = p.parse_args()
     root = Path(__file__).resolve().parents[1]

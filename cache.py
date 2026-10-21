@@ -9,7 +9,7 @@ import torch
 
 @dataclass(frozen=True)
 class CacheConfig:
-    threshold: float = 0.05
+    threshold: float = 0.08
     start_percent: float = 0.10
     end_percent: float = 0.90
     max_consecutive_hits: int = 1
@@ -17,8 +17,8 @@ class CacheConfig:
     metric_stride: int = 4
     max_cache_mb: int = 512
     threshold_mode: str = "constant"
-    split_ratio: float = 0.5
-    late_threshold: float = 0.05
+    split_ratio: float = 0.30
+    late_threshold: float = 0.14
 
     def __post_init__(self):
         numbers = (self.threshold, self.start_percent, self.end_percent, self.split_ratio, self.late_threshold)

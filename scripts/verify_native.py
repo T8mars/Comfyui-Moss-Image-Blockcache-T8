@@ -37,7 +37,7 @@ def request(url, data=None):
         raise RuntimeError(e.read().decode()) from e
 
 
-def make_prompt(variant="sft", case="english", seed=42, size=1024, steps=50, mode="cache", threshold=0.05,
+def make_prompt(variant="sft", case="english", seed=42, size=1024, steps=50, mode="cache", threshold=0.08,
                 skip22=True, cache_device="gpu", tag="verify", cfg=3.0):
     graph = {
         "1": {"class_type": "UNETLoader", "inputs": {"unet_name": f"moss_image_original_{variant}_bf16.safetensors", "weight_dtype": "default"}},
@@ -57,7 +57,7 @@ def make_prompt(variant="sft", case="english", seed=42, size=1024, steps=50, mod
             "model": model, "enabled": mode != "disabled", "threshold": 0.0 if mode == "zero" else threshold,
             "start_percent": 0.10, "end_percent": 0.90, "max_consecutive_hits": 1,
             "cache_device": cache_device, "max_cache_mb": 512, "metric_stride": 4,
-            "threshold_mode": "constant", "split_ratio": 0.5, "late_threshold": threshold,
+            "threshold_mode": "constant", "split_ratio": 0.30, "late_threshold": 0.14,
         }}
         model = ["8", 0]
     if skip22:
@@ -147,7 +147,7 @@ def main():
     p.add_argument("--steps", type=int, default=50)
     p.add_argument("--cfg", type=float, default=3.0)
     p.add_argument("--mode", choices=["baseline", "cache", "zero", "disabled"], default="cache")
-    p.add_argument("--threshold", type=float, default=0.05)
+    p.add_argument("--threshold", type=float, default=0.08)
     p.add_argument("--cache-device", choices=["gpu", "cpu"], default="gpu")
     p.add_argument("--no-skip22", action="store_true")
     p.add_argument("--tag", default="verify")

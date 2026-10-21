@@ -33,7 +33,7 @@ def test_shifted_window_and_two_stage():
     assert r.end == Sampling().percent_to_sigma(0.9)
     assert r.active(r.start)
     assert not r.active(r.end)
-    assert r.threshold(r.split + 1e-4) == 0.05
+    assert r.threshold(r.split + 1e-4) == 0.08
     assert r.threshold(r.split) == 0.2
 
 
